@@ -1,5 +1,7 @@
 # Math Curve Loaders
 
+[Live Preview](https://paidax01.github.io/math-curve-loaders/)
+
 A small gallery of mathematical curve based loading animations built with plain HTML, CSS, and JavaScript.
 
 It includes:
@@ -22,12 +24,6 @@ It includes:
 ## Run
 
 Open `index.html` directly in a browser.
-
-## Live Demo
-
-Once GitHub Pages finishes deploying, the site should be available at:
-
-`https://paidax01.github.io/math-curve-loaders/`
 
 ## Why
 
