@@ -8,11 +8,22 @@ const viewerPath = document.querySelector("#viewer-path");
 const viewerTitle = document.querySelector("#viewer-title");
 const viewerTag = document.querySelector("#viewer-tag");
 const viewerDesc = document.querySelector("#viewer-desc");
+const viewerControls = document.querySelector("#viewer-controls");
 const viewerFormula = document.querySelector("#viewer-formula");
 const viewerCode = document.querySelector("#viewer-code code");
 const viewerCopy = document.querySelector("#viewer-copy");
 const viewerClose = document.querySelector("#viewer-close");
+const viewerReset = document.querySelector("#viewer-reset");
 let openAnimationFrame = 0;
+
+const CONTROL_DEFS = [
+  { key: "particleCount", label: "Particles", min: 24, max: 140, step: 1 },
+  { key: "trailSpan", label: "Trail", min: 0.12, max: 0.68, step: 0.01 },
+  { key: "durationMs", label: "Loop", min: 2400, max: 12000, step: 100 },
+  { key: "pulseDurationMs", label: "Pulse", min: 1800, max: 10000, step: 100 },
+  { key: "rotationDurationMs", label: "Rotate", min: 6000, max: 60000, step: 500 },
+  { key: "strokeWidth", label: "Stroke", min: 2.5, max: 7.5, step: 0.1 },
+];
 
 const curves = [
   {
@@ -608,6 +619,60 @@ const viewerParticles = Array.from({ length: 120 }, () => {
 });
 
 let activeInstance = null;
+let activeViewerConfig = null;
+
+function formatControlValue(key, value) {
+  if (key.endsWith("Ms")) {
+    return `${(value / 1000).toFixed(1)}s`;
+  }
+
+  if (key === "trailSpan" || key === "strokeWidth") {
+    return Number(value).toFixed(2);
+  }
+
+  return `${Math.round(value)}`;
+}
+
+function createViewerConfig(config) {
+  return {
+    ...config,
+    point: config.point,
+    formula: config.formula,
+  };
+}
+
+function renderControls(config) {
+  viewerControls.innerHTML = "";
+
+  CONTROL_DEFS.forEach((control) => {
+    const wrap = document.createElement("label");
+    wrap.className = "viewer-control";
+    wrap.innerHTML = `
+      <div class="viewer-control-head">
+        <span class="viewer-control-label">${control.label}</span>
+        <span class="viewer-control-value" data-value-key="${control.key}">
+          ${formatControlValue(control.key, config[control.key])}
+        </span>
+      </div>
+      <input
+        type="range"
+        min="${control.min}"
+        max="${control.max}"
+        step="${control.step}"
+        value="${config[control.key]}"
+        data-key="${control.key}"
+      />
+    `;
+    viewerControls.appendChild(wrap);
+  });
+}
+
+function syncViewerMeta(config) {
+  viewerFormula.textContent = config.formula;
+  viewerCode.textContent = formatCurveCode(config);
+  viewerPath.setAttribute("stroke-width", String(config.strokeWidth));
+  renderControls(config);
+}
 
 function formatCurveCode(config) {
   const pointSource = config.point.toString().replace(/^point/, "function point");
@@ -652,9 +717,8 @@ function setActiveInstance(instance) {
   viewerTitle.textContent = instance.config.name;
   viewerTag.textContent = instance.config.tag;
   viewerDesc.textContent = instance.config.description;
-  viewerFormula.textContent = instance.config.formula;
-  viewerCode.textContent = formatCurveCode(instance.config);
-  viewerPath.setAttribute("stroke-width", String(instance.config.strokeWidth));
+  activeViewerConfig = createViewerConfig(instance.config);
+  syncViewerMeta(activeViewerConfig);
 
   instances.forEach((item) => {
     item.article.classList.toggle("is-active", item === instance);
@@ -686,9 +750,11 @@ function clearActiveInstance() {
   viewerTitle.textContent = "";
   viewerTag.textContent = "";
   viewerDesc.textContent = "";
+  viewerControls.innerHTML = "";
   viewerFormula.textContent = "";
   viewerCode.textContent = "";
   viewerPath.setAttribute("d", "");
+  activeViewerConfig = null;
 }
 
 instances.forEach((instance) => {
@@ -707,18 +773,18 @@ viewerClose.addEventListener("click", () => {
 });
 
 viewerCopy.addEventListener("click", async () => {
-  if (!activeInstance) {
+  if (!activeInstance || !activeViewerConfig) {
     return;
   }
 
   const textToCopy = [
-    `${activeInstance.config.name}`,
+    `${activeViewerConfig.name}`,
     "",
     "Formula",
-    activeInstance.config.formula,
+    activeViewerConfig.formula,
     "",
     "Code",
-    formatCurveCode(activeInstance.config),
+    formatCurveCode(activeViewerConfig),
   ].join("\n");
 
   try {
@@ -733,6 +799,41 @@ viewerCopy.addEventListener("click", async () => {
       viewerCopy.textContent = "复制";
     }, 1400);
   }
+});
+
+viewerReset.addEventListener("click", () => {
+  if (!activeInstance) {
+    return;
+  }
+
+  activeViewerConfig = createViewerConfig(activeInstance.config);
+  syncViewerMeta(activeViewerConfig);
+});
+
+viewerControls.addEventListener("input", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement) || !activeViewerConfig) {
+    return;
+  }
+
+  const { key } = target.dataset;
+  if (!key) {
+    return;
+  }
+
+  const nextValue = key === "particleCount"
+    ? Math.round(Number(target.value))
+    : Number(target.value);
+
+  activeViewerConfig[key] = nextValue;
+
+  const valueEl = viewerControls.querySelector(`[data-value-key="${key}"]`);
+  if (valueEl) {
+    valueEl.textContent = formatControlValue(key, nextValue);
+  }
+
+  viewerCode.textContent = formatCurveCode(activeViewerConfig);
+  viewerPath.setAttribute("stroke-width", String(activeViewerConfig.strokeWidth));
 });
 
 viewerBackdrop.addEventListener("click", () => {
@@ -771,7 +872,8 @@ function renderViewer(now) {
   }
 
   const time = now - activeInstance.startTime;
-  const { config, phaseOffset } = activeInstance;
+  const { phaseOffset } = activeInstance;
+  const config = activeViewerConfig ?? activeInstance.config;
   const progress =
     ((time + phaseOffset * config.durationMs) % config.durationMs) / config.durationMs;
   const detailScale = getDetailScale(time, config, phaseOffset);

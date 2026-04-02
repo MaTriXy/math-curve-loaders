@@ -270,8 +270,68 @@ body {
   margin-top: 14px;
 }
 
+.viewer-controls-block,
 .viewer-formula-block {
   margin-top: 18px;
+}
+
+.viewer-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.viewer-reset {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.viewer-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.viewer-control {
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.viewer-control-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.viewer-control-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.viewer-control-value {
+  font-family: "SF Mono", "JetBrains Mono", "Menlo", monospace;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.viewer-control input[type="range"] {
+  width: 100%;
+  margin: 0;
+  accent-color: #ffffff;
+  background: transparent;
 }
 
 .viewer-tag,
@@ -373,6 +433,10 @@ body {
   .viewer {
     width: min(100vw - 24px, 760px);
     max-height: calc(100vh - 24px);
+    grid-template-columns: 1fr;
+  }
+
+  .viewer-controls {
     grid-template-columns: 1fr;
   }
 
