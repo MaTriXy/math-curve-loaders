@@ -368,6 +368,134 @@ const curves = [
     },
   },
   {
+    name: "Three-Petal Spiral",
+    tag: "R = 3, r = 1, d = 3",
+    descriptionEn: "This rolling-circle setup resolves into three large looping petals, all breathing together like a compact spiral flower.",
+    descriptionZh: "这组滚动圆参数会展开成 3 个大回环，而且整组圆环会像原版一样统一呼吸，像一朵紧凑的三瓣螺旋花。",
+    formula: [
+      "u(t) = ((R-r) cos t + d cos((R-r)t/r), (R-r) sin t - d sin((R-r)t/r))",
+      "m(t) = 2.2 + 0.45s",
+      "(x, y) = 50 + u(t) · m(t)",
+      "R = 3, r = 1, d = 3",
+    ].join("\n"),
+    rotate: true,
+    particleCount: 82,
+    trailSpan: 0.34,
+    durationMs: 4600,
+    rotationDurationMs: 28000,
+    pulseDurationMs: 4200,
+    strokeWidth: 4.4,
+    point(progress, detailScale) {
+      const t = progress * Math.PI * 2;
+      const R = 3;
+      const r = 1;
+      const d = 3 + detailScale * 0.25;
+      const baseX = (R - r) * Math.cos(t) + d * Math.cos(((R - r) / r) * t);
+      const baseY = (R - r) * Math.sin(t) - d * Math.sin(((R - r) / r) * t);
+      const scale = 2.2 + detailScale * 0.45;
+      return {
+        x: 50 + baseX * scale,
+        y: 50 + baseY * scale,
+      };
+    },
+  },
+  {
+    name: "Four-Petal Spiral",
+    tag: "R = 4, r = 1, d = 3",
+    descriptionEn: "With R = 4, the rolling-circle path settles into four looping petals, rotating and breathing as one ring.",
+    descriptionZh: "当 R = 4 时，滚动圆路径会稳定成 4 个回环花瓣，并且整组会一起旋转、一起呼吸。",
+    formula: [
+      "u(t) = ((R-r) cos t + d cos((R-r)t/r), (R-r) sin t - d sin((R-r)t/r))",
+      "m(t) = 2.2 + 0.45s",
+      "(x, y) = 50 + u(t) · m(t)",
+      "R = 4, r = 1, d = 3",
+    ].join("\n"),
+    rotate: true,
+    particleCount: 84,
+    trailSpan: 0.34,
+    durationMs: 4600,
+    rotationDurationMs: 28000,
+    pulseDurationMs: 4200,
+    strokeWidth: 4.4,
+    point(progress, detailScale) {
+      const t = progress * Math.PI * 2;
+      const R = 4;
+      const r = 1;
+      const d = 3 + detailScale * 0.25;
+      const baseX = (R - r) * Math.cos(t) + d * Math.cos(((R - r) / r) * t);
+      const baseY = (R - r) * Math.sin(t) - d * Math.sin(((R - r) / r) * t);
+      const scale = 2.2 + detailScale * 0.45;
+      return {
+        x: 50 + baseX * scale,
+        y: 50 + baseY * scale,
+      };
+    },
+  },
+  {
+    name: "Five-Petal Spiral",
+    tag: "R = 5, r = 1, d = 3",
+    descriptionEn: "With R = 5, the loop count increases to five petals, giving the spiral flower a denser and more ornate rhythm.",
+    descriptionZh: "当 R = 5 时，回环数量会变成 5 个花瓣，整朵螺旋花会显得更密、更华丽。",
+    formula: [
+      "u(t) = ((R-r) cos t + d cos((R-r)t/r), (R-r) sin t - d sin((R-r)t/r))",
+      "m(t) = 2.2 + 0.45s",
+      "(x, y) = 50 + u(t) · m(t)",
+      "R = 5, r = 1, d = 3",
+    ].join("\n"),
+    rotate: true,
+    particleCount: 85,
+    trailSpan: 0.34,
+    durationMs: 4600,
+    rotationDurationMs: 28000,
+    pulseDurationMs: 4200,
+    strokeWidth: 4.4,
+    point(progress, detailScale) {
+      const t = progress * Math.PI * 2;
+      const R = 5;
+      const r = 1;
+      const d = 3 + detailScale * 0.25;
+      const baseX = (R - r) * Math.cos(t) + d * Math.cos(((R - r) / r) * t);
+      const baseY = (R - r) * Math.sin(t) - d * Math.sin(((R - r) / r) * t);
+      const scale = 2.2 + detailScale * 0.45;
+      return {
+        x: 50 + baseX * scale,
+        y: 50 + baseY * scale,
+      };
+    },
+  },
+  {
+    name: "Six-Petal Spiral",
+    tag: "R = 6, r = 1, d = 3",
+    descriptionEn: "The rolling-circle path splits into six petals, and the whole ring breathes in one unified pulse like the original loader.",
+    descriptionZh: "滚动圆路径会展开成六个花瓣，而且整组圆环会像原版一样以统一节奏一起呼吸缩放。",
+    formula: [
+      "u(t) = ((R-r) cos t + d cos((R-r)t/r), (R-r) sin t - d sin((R-r)t/r))",
+      "m(t) = 2.2 + 0.45s",
+      "(x, y) = 50 + u(t) · m(t)",
+      "R = 6, r = 1, d = 3",
+    ].join("\n"),
+    rotate: true,
+    particleCount: 86,
+    trailSpan: 0.34,
+    durationMs: 4600,
+    rotationDurationMs: 28000,
+    pulseDurationMs: 4200,
+    strokeWidth: 4.4,
+    point(progress, detailScale) {
+      const t = progress * Math.PI * 2;
+      const R = 6;
+      const r = 1;
+      const d = 3 + detailScale * 0.25;
+      const baseX = (R - r) * Math.cos(t) + d * Math.cos(((R - r) / r) * t);
+      const baseY = (R - r) * Math.sin(t) - d * Math.sin(((R - r) / r) * t);
+      const scale = 2.2 + detailScale * 0.45;
+      return {
+        x: 50 + baseX * scale,
+        y: 50 + baseY * scale,
+      };
+    },
+  },
+  {
     name: "Butterfly Phase",
     tag: "Butterfly Curve",
     descriptionEn: "Exponential and high-frequency cosine terms stretch the wings unevenly, giving the path its unmistakably fluttering butterfly shape.",
